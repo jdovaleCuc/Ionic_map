@@ -1,6 +1,6 @@
 import { IonAvatar, IonButton, IonButtons, IonChip, IonContent, IonFooter, IonHeader, IonIcon, IonInput, IonItem, IonModal, IonTitle, IonToolbar } from '@ionic/react';
 import { arrowBack, happySharp, sendSharp } from 'ionicons/icons';
-import { getFirestore, collection, addDoc, onSnapshot, DocumentData, query, where, Timestamp, orderBy} from 'firebase/firestore'
+import { getFirestore, collection, addDoc, onSnapshot, DocumentData, query, where, Timestamp, orderBy } from 'firebase/firestore'
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 
@@ -21,13 +21,13 @@ const ChatModal: React.FC<chatModal> = ({ showChat, setShowChat, toUser }) => {
 
     const { userData } = useContext(AppContext);
     const db = getFirestore();
+    const [messages, setMessages] = useState<DocumentData>([])
+    const [message, setMessage] = useState('');
 
     useEffect(() => {
         getMessages();
+        
     }, [])
-
-    const [messages, setMessages] = useState<DocumentData>([])
-    const [message, setMessage] = useState('');
 
     const handleMessage = () => {
         SendMessage({
@@ -46,22 +46,20 @@ const ChatModal: React.FC<chatModal> = ({ showChat, setShowChat, toUser }) => {
         });
     }
 
-    const getMessages = async () => {
+    const getMessages =  () => {
         const ref = collection(db, 'mensajes')
-        const querydata = query( ref, where('from', '==', userData.email), 
-                                      where('to', '==', toUser.email),
-                                      orderBy('date', 'asc')
-        );
-
+        const querydata = query(ref, where('from', 'in', [toUser.email, userData.email]),
+                                    orderBy('date', 'asc'));
         onSnapshot(querydata, (queryDocs) => {
             const data: Array<DocumentData> = []
             queryDocs.forEach(doc => {
-                data.push({...doc.data() , key: doc.id });
+                data.push({ ...doc.data(), key: doc.id });
             })
             setMessages(data)
-            console.log(data)
+            console.log('mensajes' , data)
         })
     }
+
     return (
         <IonContent id="main">
             <IonModal isOpen={showChat} >
@@ -75,26 +73,26 @@ const ChatModal: React.FC<chatModal> = ({ showChat, setShowChat, toUser }) => {
                         <IonAvatar slot="start" style={{ width: '35px', height: '35px' }}>
                             <img src="http://pm1.narvii.com/6513/891d31199d907db135932627c04bd737977ffc69_00.jpg" />
                         </IonAvatar>
-                        <IonTitle  className="ion-text-capitalize" style={{ padding: '10px' }}>
+                        <IonTitle className="ion-text-capitalize" style={{ padding: '10px' }}>
                             {toUser.name + ' ' + toUser.lastname}
                         </IonTitle>
                     </IonToolbar>
                 </IonHeader>
                 <IonContent id="messages-content">
-                    {messages.map((message: DocumentData ) => {
-                        if(message.from == userData.email){
+                    {messages.map((message: DocumentData) => {
+                        if (message.from == userData.email && message.to == toUser.email) {
                             return (
                                 <IonItem lines="none" key={message.key}>
                                     <IonChip slot="end" color="success">{message.message}</IonChip>
                                 </IonItem>
                             )
-                        }else{
+                        } else if (message.from == toUser.email && message.to == userData.email)  {
                             return (
-                                <IonItem lines="none"  key={message.key}>
+                                <IonItem lines="none" key={message.key}>
                                     <IonChip slot="start">{message.message}</IonChip>
                                 </IonItem>
                             )
-                        }     
+                        }
                     })}
                 </IonContent>
                 <IonFooter>
