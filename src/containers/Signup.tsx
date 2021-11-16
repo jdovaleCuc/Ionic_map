@@ -1,4 +1,4 @@
-import { IonContent, IonLabel, IonPage, IonCardHeader, IonCardSubtitle, IonImg, IonCardContent, IonItem, IonInput, IonButton, useIonViewWillEnter } from '@ionic/react';
+import { IonContent, IonLabel, IonPage, IonCardHeader, IonCardSubtitle, IonImg, IonCardContent, IonItem, IonInput, IonButton, IonLoading } from '@ionic/react';
 import React, { useContext, useRef } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import logo from '../assets/pin-de-mapa.png'
@@ -8,16 +8,14 @@ import useInitialState from '../hooks/useInitialState';
 const Signup: React.FC = () => {
 
     const { auth } = useContext<any>(AppContext)
-    const { signUpUser } = useInitialState();
+    const { signUpUser, error, loading } = useInitialState();
     const form = useRef<HTMLFormElement>(null);
 
-    useIonViewWillEnter(() => {
-        if (auth) {
-            return (
-                <Redirect to="/home"></Redirect>
-            )
-        }
-    });
+    if (loading) {
+        return(
+            <IonLoading isOpen message="...Espere" />
+        )
+    }
     
     const handleSubmit = ( e : React.FormEvent<HTMLFormElement> ) => {
         e.preventDefault();
@@ -39,11 +37,11 @@ const Signup: React.FC = () => {
         <IonPage>
             <IonContent fullscreen className="ion-text-center">
                 <IonCardHeader>
-                    <IonImg src={logo} style={{ width: "auto", height: "180px" }} />
+                    <IonImg src={logo} style={{ width: "auto", height: "120px" }} />
                     <h3>Registrarse</h3>
                     <IonCardSubtitle>Coloca un correo y crea una contraseña</IonCardSubtitle>
                 </IonCardHeader>
-                <IonCardContent>
+                <IonCardContent >
                     <form ref={form} onSubmit={handleSubmit}>
                         <IonItem>
                             <IonLabel position="floating" >Nombre</IonLabel>
@@ -67,6 +65,7 @@ const Signup: React.FC = () => {
                         <br />
                         <IonButton type="submit" expand="block">Registrarse</IonButton>
                     </form>
+                    {error && <IonLabel color='danger'>{error}</IonLabel>}
                     <br />
                     <IonLabel>ya estas registrado ? </IonLabel><Link to="/login" className="text-decoration-none" style={{ textDecoration: "none" }}>Iniciar sesion</Link>
                 </IonCardContent>

@@ -1,7 +1,10 @@
+import { Geolocation } from '@ionic-native/geolocation'
+import { IonLoading } from '@ionic/react';
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react"
 import { React, useEffect, useState } from "react";
 
 const MapContainer = (props) => {
+
 
     const [userlat, setUserLat ] = useState('')
     const [userlng, setUserLng ] = useState('')
@@ -11,11 +14,10 @@ const MapContainer = (props) => {
         height: '100%'
     }
 
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition(function(position){
-            setUserLat(position.coords.latitude)
-            setUserLng(position.coords.longitude)
-        })
+    useEffect( async () => {
+        const position = await Geolocation.getCurrentPosition();
+        setUserLat(position.coords.latitude)
+        setUserLng(position.coords.longitude)
     }, []);
    
     
@@ -49,4 +51,3 @@ export default GoogleApiWrapper(
     })
 
 )(MapContainer)
-

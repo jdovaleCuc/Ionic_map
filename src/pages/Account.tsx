@@ -1,4 +1,4 @@
-import { IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCol, IonContent, IonGrid, IonIcon, IonItem, IonItemDivider, IonLabel, IonList, IonPage, IonRow, useIonViewWillEnter } from '@ionic/react';
+import { IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCol, IonContent, IonGrid, IonIcon, IonItem, IonItemDivider, IonLabel, IonList, IonLoading, IonPage, IonRow } from '@ionic/react';
 import { chevronForward, compassSharp, exitSharp, personSharp, settingsSharp, syncCircleSharp } from 'ionicons/icons';
 import React, { useContext, useEffect, useState } from 'react';
 import '../theme/Account.css'
@@ -13,7 +13,7 @@ const Account: React.FC = () => {
     const { userData } = useContext(AppContext)
     const [userOption, setUserOption] = useState<DocumentData>();
 
-    const { logOutUser } = useInitialState();
+    const { logOutUser, loading } = useInitialState();
     const history = useHistory();
     
     useEffect( () => {
@@ -28,20 +28,23 @@ const Account: React.FC = () => {
             }
         );
     }, [])
-         
-    
 
+    if (loading) {
+        return(
+            <IonLoading isOpen message="...Espere" />
+        )
+    }
+    
     const handleSubmit = (button: String) => {
         logOutUser();
         if (button === 'cambiar_cuenta') {
-            history.replace('/login');
+            history.push('/login');
         } else if (button === 'salir') {
-            history.replace('/welcome');
+            history.push('/welcome');
         }
 
     }
-
-
+    
     return (
         <IonPage>
             <IonContent fullscreen>

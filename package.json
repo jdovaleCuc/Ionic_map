@@ -3,13 +3,17 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@capacitor/android": "3.3.1",
     "@capacitor/app": "1.0.5",
-    "@capacitor/core": "3.2.5",
+    "@capacitor/core": "^3.3.1",
     "@capacitor/haptics": "1.1.2",
     "@capacitor/keyboard": "1.1.2",
     "@capacitor/status-bar": "1.0.5",
+    "@ionic-native/core": "^5.36.0",
+    "@ionic-native/geolocation": "^5.36.0",
     "@ionic/react": "^5.5.0",
     "@ionic/react-router": "^5.5.0",
+    "@react-google-maps/api": "^2.5.0",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.6.3",
@@ -19,6 +23,7 @@
     "@types/react-dom": "^16.9.10",
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
+    "cordova-plugin-geolocation": "^4.1.0",
     "firebase": "^9.2.0",
     "google-maps-react": "^2.0.6",
     "ionicons": "^5.4.0",
@@ -68,7 +73,7 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "3.2.5"
+    "@capacitor/cli": "^3.3.1"
   },
   "description": "An Ionic project"
 }
