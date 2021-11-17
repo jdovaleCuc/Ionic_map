@@ -1,38 +1,22 @@
 import { IonAvatar, IonContent, IonLabel, IonList, IonListHeader, IonPage, IonItem, IonSearchbar, IonLoading } from '@ionic/react';
-import React, { useContext, useEffect, useState } from 'react';
-import { collection, DocumentData, getFirestore, onSnapshot } from "@firebase/firestore";
+import React, { useContext, useState } from 'react';
+import {  DocumentData } from "@firebase/firestore";
 import avatarLogo from '../assets/avatardefault_92824.png'
 import ChatModal from '../components/ChatModal';
 import { AppContext } from '../context/AppContext';
+import useGetUsers from '../hooks/useGetUsers';
 
 const Chat: React.FC = () => {
+
     const { userData } = useContext(AppContext);
 
-    const [loading, setLoading] = useState(true);
+    const { loading, Users } = useGetUsers();
     const [showChat, setShowChat] = useState(false);
     const [toEmail, setToEmail] = useState<DocumentData>();
-    const [users, setUsers] = useState<Array<DocumentData>>([])
-
-    useEffect(() => {
-        getUsers();
-    }, [])
 
     const HandleClickUser = (user: DocumentData) => {
         setToEmail(user)
         setShowChat(true);
-
-    }
-
-    const getUsers = () => {
-        const db = getFirestore();
-        onSnapshot(collection(db, 'usuarios'), (query) => {
-            const data: Array<DocumentData> = []
-            query.forEach(doc => {
-                data.push({ ...doc.data(), key: doc.id });
-            })
-            setUsers(data);
-            setLoading(false);
-        });
     }
 
     if (loading) {
@@ -83,7 +67,7 @@ const Chat: React.FC = () => {
                     <IonListHeader>
                         TODOS LOS USUARIOS
                     </IonListHeader>
-                    {users.length > 0 && users.map((element: DocumentData) => {
+                    {Users.length > 0 && Users.map((element: DocumentData) => {
                         if ( element.email != userData.email ) {
                             return (
                                 <IonItem key={element.key}
@@ -100,9 +84,7 @@ const Chat: React.FC = () => {
                                 </IonItem>
                             )
                         }
-
-                    })
-                    }
+                    })}
                 </IonList>
             </IonContent>
         </IonPage>

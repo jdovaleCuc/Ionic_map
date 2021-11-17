@@ -1,6 +1,6 @@
-import { IonButton, IonCardContent, IonCardHeader, IonCardSubtitle, IonContent, IonInput, IonItem, IonLabel, useIonLoading, IonPage, IonImg } from '@ionic/react'
-import React, { useContext, useRef } from 'react'
-import { Link, useHistory } from 'react-router-dom';
+import { IonButton, IonCardContent, IonCardHeader, IonCardSubtitle, IonContent, IonInput, IonItem, IonLabel, useIonLoading, IonPage, IonImg, IonLoading } from '@ionic/react'
+import React, { useContext, useRef, useState } from 'react'
+import { Link, useHistory, Redirect } from 'react-router-dom';
 import mapa from '../assets/pin-de-mapa.png'
 import { AppContext } from '../context/AppContext'
 import useInitialState from '../hooks/useInitialState';
@@ -9,17 +9,17 @@ import useInitialState from '../hooks/useInitialState';
 const Login: React.FC = () => {
 
     const authContext = useContext<any>(AppContext);
-    const { loginUser } = useInitialState();
-    const history = useHistory();
+    const { loginUser, error, loading } = useInitialState();
+    const history = useHistory()
+
     const form = useRef<HTMLFormElement>(null);
-
-    if (authContext.loggedIn) {
-        history.replace('/map');
-   }
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement> ) => {
+    if(loading){
+        return(
+            <IonLoading isOpen message="...Espere"/> 
+        )
+    }
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement> ) => {
         e.preventDefault();
-        
         if (form.current) {
             const formdata = new FormData(form.current)
             const data = {
@@ -28,7 +28,9 @@ const Login: React.FC = () => {
     
             }
            loginUser(data);  
+
         }
+        
     }
 
     return (
@@ -58,8 +60,9 @@ const Login: React.FC = () => {
                             INICIAR SESION
                         </IonButton>
                     </form>
+                    { error && <IonLabel color='danger'>{error}</IonLabel> }
                     <br />
-                    <IonLabel>No tienes cuenta ? </IonLabel><Link to="/signup" className="text-decoration-none" style={{ textDecoration: "none" }}>Registrate</Link>
+                    <IonLabel>No tienes cuenta ? </IonLabel><Link to="/signup" style={{ textDecoration: "none" }}>Registrate</Link>
                 </IonCardContent>
             </IonContent>
         </IonPage>

@@ -1,5 +1,5 @@
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonIcon, IonLabel, IonLoading, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react';
+import { IonApp, IonLoading, IonRouterOutlet, } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
 
@@ -25,10 +25,7 @@ import Welcome from './pages/Welcome';
 import Login from './pages/Login';
 import Signup from './containers/Signup';
 import { AppContext, useAuthInit } from './context/AppContext';
-import { map, chatbubbleEllipsesOutline, personCircleSharp } from 'ionicons/icons';
-import Map from './pages/Map';
-import Account from './pages/Account';
-import Chat from './pages/Chat';
+import Home from './pages/Home';
 
 
 const App: React.FC = () => {
@@ -46,42 +43,17 @@ const App: React.FC = () => {
     <AppContext.Provider value={auth!}>
       <IonApp>
         {auth?.loggedIn ? (
-          <IonReactRouter>
-            <IonTabs>
-              <IonRouterOutlet>
-                <Route exact path="/map" component={Map}/>
-                <Route exact path="/chat" component={Chat}/>
-                <Route exact path="/account" component={Account}/>
-                <Route exact path="/">
-                  <Redirect to="/map" />
-                </Route>
-              </IonRouterOutlet>
-              <IonTabBar slot="bottom">
-                <IonTabButton tab="tab1" href="/map">
-                  <IonIcon icon={map} />
-                  <IonLabel>Mapa</IonLabel>
-                </IonTabButton>
-                <IonTabButton tab="tab2" href="/chat">
-                  <IonIcon icon={chatbubbleEllipsesOutline} />
-                  <IonLabel>Chat</IonLabel>
-                </IonTabButton>
-                <IonTabButton tab="tab3" href="/account">
-                  <IonIcon icon={personCircleSharp}/>
-                  <IonLabel>Perfil</IonLabel>
-                </IonTabButton>
-              </IonTabBar>
-            </IonTabs>
-          </IonReactRouter>
+          <Home />
         ) : (
           <IonReactRouter>
-            <Route exact path="/welcome" component={Welcome} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/signup" component={Signup} />
-            <Route
-              exact
-              path="/">
-              <Redirect  to="/welcome" />
-            </Route>
+            <IonRouterOutlet>
+              <Route exact path="/welcome" component={Welcome} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/signup" component={Signup} />
+              <Route exact path="/">
+                <Redirect to="/welcome" />
+              </Route>
+            </IonRouterOutlet>
           </IonReactRouter>
         )}
       </IonApp>
